@@ -1,0 +1,40 @@
+@prefix ex: <http://example.com/ict#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:IctOntology a owl:Ontology ;
+  rdfs:label "ICT Alarm Ontology Demo"@en .
+
+ex:Site a owl:Class ; rdfs:label "Site"@en .
+ex:Ne a owl:Class ; rdfs:label "Network Element"@en .
+ex:Alarm a owl:Class ; rdfs:label "Alarm"@en .
+ex:AbnormalStatusPattern a owl:Class ; rdfs:label "Abnormal Status Pattern"@en .
+
+ex:locatedIn a owl:ObjectProperty ; rdfs:domain ex:Ne ; rdfs:range ex:Site .
+ex:happen a owl:ObjectProperty ; rdfs:domain ex:Ne ; rdfs:range ex:Alarm .
+ex:happenOn a owl:ObjectProperty ; rdfs:domain ex:Alarm ; rdfs:range ex:Ne .
+ex:classify a owl:ObjectProperty ; rdfs:domain ex:Alarm ; rdfs:range ex:AbnormalStatusPattern .
+ex:trigger a owl:ObjectProperty ; rdfs:domain ex:Alarm ; rdfs:range ex:Alarm .
+ex:neLink a owl:ObjectProperty ; rdfs:domain ex:Ne ; rdfs:range ex:Ne .
+
+ex:alarmName a owl:DatatypeProperty ; rdfs:domain ex:Alarm ; rdfs:range xsd:string .
+
+ex:Site_SZ a ex:Site ; rdfs:label "Shenzhen Site" .
+ex:NE_001 a ex:Ne ; rdfs:label "NE_001" ; ex:locatedIn ex:Site_SZ .
+ex:NE_002 a ex:Ne ; rdfs:label "NE_002" ; ex:locatedIn ex:Site_SZ ; ex:neLink ex:NE_001 .
+
+ex:Alarm_LinkDown_001 a ex:Alarm ;
+  ex:alarmName "Ethernet Physical Port down" ;
+  ex:happenOn ex:NE_001 ;
+  ex:classify ex:Pattern_TransmissionFailure ;
+  ex:trigger ex:Alarm_Bandwidth_002 .
+
+ex:Alarm_Bandwidth_002 a ex:Alarm ;
+  ex:alarmName "Send bandwidth usage threshold crossed" ;
+  ex:happenOn ex:NE_002 ;
+  ex:classify ex:Pattern_Congestion .
+
+ex:Pattern_TransmissionFailure a ex:AbnormalStatusPattern ; rdfs:label "Transmission failure" .
+ex:Pattern_Congestion a ex:AbnormalStatusPattern ; rdfs:label "Congestion" .
